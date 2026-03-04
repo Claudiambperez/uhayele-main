@@ -1,13 +1,15 @@
 'use client'
 
+import LandingPage from "./Pages/Home";
 
-import { HomePage } from "./Pages";
+
+
 
 
 const Home = () => {
   return (
      <>
-     <HomePage />
+     <LandingPage />
       </>     
   );
 }

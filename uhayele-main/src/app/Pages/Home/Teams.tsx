@@ -1,4 +1,4 @@
-'use client'
+/*'use client'
 
 import React from 'react'
 
@@ -48,7 +48,7 @@ import Image from 'next/image';
   </div>
 );
 */
-
+/*
 const Teams: React.FC = () => {
   return (
   
@@ -130,4 +130,4 @@ const Teams: React.FC = () => {
   )
 }
 
-export default Teams;
+export default Teams;*/

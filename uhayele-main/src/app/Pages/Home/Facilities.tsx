@@ -4,7 +4,7 @@ import React from 'react'
 import { FiFileText } from 'react-icons/fi'
 import { GiHospitalCross } from 'react-icons/gi'
 import { ImLab } from 'react-icons/im'
-import { people, peopleUrl } from '../../../../constants'
+import { people } from '../../../../constants'
 import { AnimatedTooltip } from '@/components/ui/animated-tooltip'
 
 

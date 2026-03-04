@@ -3,7 +3,7 @@
 
 
 //DEPENDENCY
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Badge } from "@/components/ui/badge"
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards"
 import { testimonials } from "@/app/assets/data/Testimonial"

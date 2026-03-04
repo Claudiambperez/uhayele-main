@@ -2,7 +2,7 @@ import Image from 'next/image';
 import React from 'react'
 import { FcFeedback } from 'react-icons/fc'
 import { assets } from '../assets/images';
-import { formatDate } from '../../../lib/utils';
+//import { formatDate } from '../../../lib/utils';
 
 
 const DoctorFeedback = () => {
@@ -22,7 +22,7 @@ const DoctorFeedback = () => {
                         </figure>
                          <div className="">
                             <h5 className='bold-16 text-sec leading-6 '>Mariana Alves</h5>
-                            <p className='text-sec'>{ formatDate('02-14-2024')} </p>
+                         
                           
                          </div>
                            <p className=' regular-14 text-sec leading-6'>

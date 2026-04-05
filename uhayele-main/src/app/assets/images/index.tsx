@@ -41,6 +41,7 @@ import doctor_7 from './doc7.jpg'
 import faq from './faq.gif'
 import avatar from './avatar-icon.png'
 import stethoscope from './stethoscope1.png'
+import sthetocospe1 from './sthetoscope.jpg'    
 
 //Objects
 export const assets = {
@@ -82,6 +83,7 @@ export const assets = {
     quote,
     star,
     sthetoscope,
+    sthetocospe1,
     stethoscope,
     oftamology,
     oncology

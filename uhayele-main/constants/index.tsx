@@ -15,14 +15,18 @@ import {
   Calendar,
   Video,
   CreditCard,
+  UserRound,
   User,
   FileText,
   ShieldCheck,
+  Stethoscope
 } from "lucide-react";
 
 
 //DEPENDENCY
 import  { StaticImageData }  from 'next/image';
+import { cn } from "@/lib/utils";
+import { RoleSelectionCard, UserRole } from "@/app/types";
 
 
 //NAVIGATION
@@ -482,8 +486,64 @@ export const socialLinks = [
 ]
 
  
-
 //AUTHENTICATION
 export type AuthProps = {
   children: React.ReactNode;  
 }
+
+
+// ROLE SECTION (focus card)
+
+function RoleIcon({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      className="
+        relative flex h-[72px] w-[72px] items-center justify-center
+        rounded-[22px]
+        bg-white/70 backdrop-blur-xl
+        border border-white/40
+        shadow-[0_8px_20px_rgba(0,0,0,0.06)]
+        transition-all duration-300
+        group-hover:scale-[1.04]
+      "
+    >
+      {/* subtle light reflection */}
+      <div className="pointer-events-none absolute inset-0 rounded-[22px] bg-[linear-gradient(180deg,rgba(255,255,255,0.6),transparent_60%)]" />
+      
+      <div className="relative z-10">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+export const roleCard: RoleSelectionCard[] = [
+  {
+    key: "doctor",
+    role: UserRole.DOCTOR,                    // ← Use enum here
+    title: "Médico",                          // optional
+    description: "Atender pacientes e gerir a sua agenda clínica.",
+    icon: (
+        <RoleIcon>
+        <Stethoscope
+          className="h-8 w-8 text-neutral-800"
+          strokeWidth={1.6}
+        />
+      </RoleIcon>
+    ),
+  },
+  {
+    key: "patient",
+    role: UserRole.PATIENT,                   // ← Use enum here
+    title: "Paciente",
+    description: "Agendar consultas e acompanhar a sua saúde.",
+    icon: (
+       <RoleIcon>
+        <UserRound
+          className="h-8 w-8 text-neutral-700"
+          strokeWidth={1.6}
+        />
+      </RoleIcon>
+    ),
+  },
+];

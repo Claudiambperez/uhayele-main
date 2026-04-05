@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
 
-import { dark } from '@clerk/themes'
+
 import { Oswald, Roboto } from "next/font/google";
 import "./globals.css";
-import { cn } from "../../lib/utils";
+import { cn } from "../lib/utils";
 import { SpeedInsights } from "@vercel/speed-insights/next"
-
-//import Header from "./Components/Header";
-import Footer from "./Components/Footer";
-import { NavbarDemo } from "./Components/Navbar";
 import AppContextProvider from "./context/AppContext";
 import { ThemeProvider } from "next-themes";
-import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
+
 
 
 
@@ -53,14 +49,11 @@ export default function RootLayout({
 
         <AppContextProvider>
       
-   <NavbarDemo />
- 
+  
          <main className="relative overflow-hidden">
         {children}
          </main> 
-         <Footer/>  
-    
-         
+           
         </AppContextProvider>
    
      </ThemeProvider>

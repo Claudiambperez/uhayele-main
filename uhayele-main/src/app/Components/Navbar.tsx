@@ -29,7 +29,7 @@ export function NavbarDemo() {
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
             <NavbarButton href="/login" variant="secondary">Login</NavbarButton>
-            <NavbarButton variant="primary">Registrar-se</NavbarButton>
+            <NavbarButton href="/signup" variant="primary">Registrar-se</NavbarButton>
           </div>
         
         </NavBody>

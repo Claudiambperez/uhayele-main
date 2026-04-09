@@ -8,11 +8,12 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel"
-import { testimonialModal } from "../../../constants"
+
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { useState } from "react"
 import { motion } from "motion/react"
+import { testimonialModal } from "../../constants"
 
 export function CarouselPlugin() {
   const plugin = React.useRef(

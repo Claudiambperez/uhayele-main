@@ -147,6 +147,10 @@ export type Doctor = {
   userId: string;
   email?: string;
   phone?: string;
+  
+  // New fields
+  yearsOfExperience?: number;
+  description?: string;
 
   user: User;
   medicalRecords: MedicalRecord[];
@@ -363,6 +367,7 @@ export type DoctorOnboardingData = {
   email: string;
   phone: string;
   serialNumber: string;
-  licenseNumber?: string;
+  yearsOfExperience?: number;      // Now real field
+  description?: string;            // Now real field
   specialities: string[];
 };

@@ -12,8 +12,9 @@ import {
 } from "@/components/ui/resizable-navbar";
 
 import { useState } from "react";
-import { navItems } from "../../../constants";
+
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import { navItems } from "../../constants";
 
 export function NavbarDemo() {
 

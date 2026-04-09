@@ -11,10 +11,10 @@ import OnboardingLayout from "../OnboardingLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { SelectScrollable } from "@/app/Components/SelectScrollable";
+import { SelectScrollable } from "@/components/SelectScrollable";
 
-import { DoctorOnboardingData } from "@/app/types";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -23,7 +23,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-// Zod Schema
+// Fixed Schema - Better handling of yearsOfExperience
 const doctorSchema = z.object({
   firstName: z.string().min(2, "O primeiro nome deve ter pelo menos 2 caracteres."),
   lastName: z.string().min(2, "O apelido deve ter pelo menos 2 caracteres."),
@@ -31,8 +31,17 @@ const doctorSchema = z.object({
   phone: z.string().min(9, "Número de telefone inválido (mínimo 9 dígitos)."),
   serialNumber: z
     .string()
-    .min(4, "Número de licença é obrigatório.")
-    .max(30, "Número de licença demasiado longo."),
+    .min(4, "Número de série é obrigatório.")
+    .max(30, "Número de série demasiado longo."),
+  
+  // yearsOfExperience: Keep as string in form, transform only on submit
+  yearsOfExperience: z.string().optional(),
+  
+  description: z
+    .string()
+    .max(500, "A descrição não pode ter mais de 500 caracteres")
+    .optional(),
+  
   specialities: z
     .array(z.string())
     .min(1, "Adicione pelo menos uma especialidade.")
@@ -57,47 +66,54 @@ export default function DoctorOnboarding() {
       email: "",
       phone: "",
       serialNumber: "",
+      yearsOfExperience: "",
+      description: "",
       specialities: [],
     },
   });
 
   const addSpeciality = (value: string) => {
     const speciality = value.trim();
-    if (!speciality || specialities.includes(speciality)) return;
-    if (specialities.length >= 3) return;
+    if (!speciality || specialities.includes(speciality) || specialities.length >= 3) return;
 
     const newSpecialities = [...specialities, speciality];
     setSpecialities(newSpecialities);
-
-    form.setValue("specialities", newSpecialities, {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
+    form.setValue("specialities", newSpecialities, { shouldValidate: true });
+    setSelectedSpeciality("");
   };
 
   const removeSpeciality = (index: number) => {
     const newSpecialities = specialities.filter((_, i) => i !== index);
     setSpecialities(newSpecialities);
-
-    form.setValue("specialities", newSpecialities, {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
+    form.setValue("specialities", newSpecialities, { shouldValidate: true });
   };
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     setIsLoading(true);
 
-    const fullData: DoctorOnboardingData = {
-      ...data,
+    // Convert yearsOfExperience to number only when submitting
+    const fullData = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
+      serialNumber: data.serialNumber,
+      yearsOfExperience: data.yearsOfExperience 
+        ? parseInt(data.yearsOfExperience, 10) 
+        : undefined,
+      description: data.description || undefined,
       specialities: data.specialities,
     };
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 1500));
+
       console.log("✅ Doctor Onboarding Data:", fullData);
-      router.push("/dashboard/doctor");
+
+      alert("Perfil de Médico criado com sucesso!");
+      router.push("/doctor");
+
     } catch (error) {
       console.error(error);
       alert("Ocorreu um erro. Tente novamente.");
@@ -112,10 +128,11 @@ export default function DoctorOnboarding() {
       currentStep={2}
       title="Dados Pessoais"
       subtitle="Complete as informações para continuar."
-      isLoading={isLoading}
+       isLoading={isLoading}
     >
       <TooltipProvider delayDuration={150}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          
           {/* First Name + Last Name */}
           <div className="grid grid-cols-2 gap-4">
             <LabelInputContainer>
@@ -177,89 +194,108 @@ export default function DoctorOnboarding() {
             </div>
           </LabelInputContainer>
 
-          {/* License Number + Specialities */}
+          {/* Serial Number */}
+          <LabelInputContainer>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="serialNumber">Número de Ordem Médica</Label>
+              <FieldError message={form.formState.errors.serialNumber?.message} />
+            </div>
+            <div className="relative">
+              <Hash className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 h-5 w-5" />
+              <Input
+                id="serialNumber"
+                className="pl-11 h-8"
+                placeholder="12345/OMA ou OMA-98765"
+                {...form.register("serialNumber")}
+              />
+            </div>
+          </LabelInputContainer>
+
+          {/* Years of Experience + Description */}
           <div className="grid grid-cols-2 gap-4">
             <LabelInputContainer>
               <div className="flex items-center justify-between">
-                <Label htmlFor="serialNumber">Número de Licença (Cédula Profissional)</Label>
-                <FieldError message={form.formState.errors.serialNumber?.message} />
+                <Label htmlFor="yearsOfExperience">Anos de Experiência</Label>
               </div>
-              <div className="relative">
-                <Hash className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 h-5 w-5" />
-                <Input
-                  id="serialNumber"
-                  className="pl-11 h-8"
-                  placeholder="12345/OMA ou OMA-98765"
-                  {...form.register("serialNumber")}
-                />
-              </div>
-              <p className="text-xs text-neutral-500 mt-1">
-                Exemplo em Angola: <span className="font-medium">45678/OMA</span> ou <span className="font-medium">OMA-23456</span>
-              </p>
+              <Input
+                id="yearsOfExperience"
+                type="number"
+                className="h-8"
+                placeholder="Ex: 8"
+                min="0"
+                {...form.register("yearsOfExperience")}
+              />
             </LabelInputContainer>
 
-            {/* Specialities */}
             <LabelInputContainer>
               <div className="flex items-center justify-between">
-                <Label>Especialidades</Label>
-                <FieldError message={form.formState.errors.specialities?.message} />
+                <Label htmlFor="description">Descrição Profissional (Opcional)</Label>
               </div>
-
-              <div className="flex gap-2">
-                <SelectScrollable
-                  value={selectedSpeciality}
-                  onValueChange={(value) => {
-                    setSelectedSpeciality(value);
-                    if (value) addSpeciality(value);
-                  }}
-                />
-                <Button
-                  type="button"
-                  onClick={() => addSpeciality(selectedSpeciality)}
-                  variant="secondary"
-                  disabled={!selectedSpeciality || specialities.length >= 3}
-                  className="h-8"
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-
-              <div className="flex flex-wrap gap-2 mt-3">
-                {specialities.map((spec, index) => (
-                  <Badge
-                    key={`${spec}-${index}`}
-                    variant="secondary"
-                    className="py-1 pl-3 pr-2 text-sm"
-                  >
-                    {spec}
-                    <button
-                      type="button"
-                      onClick={() => removeSpeciality(index)}
-                      className="ml-2 text-neutral-500 hover:text-red-500 transition-colors"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                ))}
-              </div>
-
-              {specialities.length > 0 && (
-                <p className="text-xs text-neutral-500 mt-1">
-                  {specialities.length}/3 especialidades
-                </p>
-              )}
+              <Textarea
+                id="description"
+                className="h-20 resize-y"
+                placeholder="Sou especialista em cardiologia com foco em prevenção cardiovascular..."
+                {...form.register("description")}
+              />
             </LabelInputContainer>
           </div>
 
-          <Button
-            type="submit"
-            className="h-8 w-full text-base font-medium"
-            disabled={isSubmitting || isLoading || form.formState.isSubmitting}
-          >
-            {isLoading || isSubmitting
-              ? "A criar perfil profissional..."
-              : "Concluir Registo de Médico"}
-          </Button>
+          {/* Specialities */}
+          <LabelInputContainer>
+            <div className="flex items-center justify-between">
+              <Label>Especialidades (máx. 3)</Label>
+              <FieldError message={form.formState.errors.specialities?.message} />
+            </div>
+
+            <div className="flex gap-2">
+              <SelectScrollable
+                value={selectedSpeciality}
+                onValueChange={(value) => {
+                  setSelectedSpeciality(value);
+                  if (value) addSpeciality(value);
+                }}
+              />
+              <Button
+                type="button"
+                onClick={() => addSpeciality(selectedSpeciality)}
+                variant="secondary"
+                disabled={!selectedSpeciality || specialities.length >= 3}
+                className="h-8"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="flex flex-wrap gap-2 mt-3">
+              {specialities.map((spec, index) => (
+                <Badge
+                  key={`${spec}-${index}`}
+                  variant="secondary"
+                  className="py-1 pl-3 pr-2 text-sm"
+                >
+                  {spec}
+                  <button
+                    type="button"
+                    onClick={() => removeSpeciality(index)}
+                    className="ml-2 text-neutral-500 hover:text-red-500 transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              ))}
+            </div>
+          </LabelInputContainer>
+
+
+           <Button
+                      type="submit"
+                      className="w-full h-8 text-base font-medium"
+                      disabled={isSubmitting || isLoading || form.formState.isSubmitting}
+                    >
+                      {isLoading || isSubmitting
+                        ? "A criar perfil profissional..."
+                        : "Concluir Registo de Médico"}
+                    </Button>
         </form>
       </TooltipProvider>
     </OnboardingLayout>

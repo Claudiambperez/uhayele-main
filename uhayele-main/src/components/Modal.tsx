@@ -5,10 +5,11 @@ import { Modal, ModalBody, ModalContent, ModalFooter, ModalTrigger } from "@/com
 import { FcFeedback } from "react-icons/fc";
 
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
-import { people } from "../../../constants";
+
 
 import { CarouselPlugin } from "./TModal";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
+import { people } from "../../constants";
 
 export function AnimatedModalDemo() {
   return (

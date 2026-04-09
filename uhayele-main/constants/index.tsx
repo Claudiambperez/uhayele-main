@@ -19,7 +19,17 @@ import {
   User,
   FileText,
   ShieldCheck,
-  Stethoscope
+  Stethoscope, 
+  HeartPulse, 
+  CircleDot, 
+  Timer, 
+  Brain, 
+  Flower2, 
+  Baby, 
+  Activity, 
+  UserCog,    
+  Users,      
+  Milestone 
 } from "lucide-react";
 
 
@@ -27,6 +37,7 @@ import {
 import  { StaticImageData }  from 'next/image';
 import { cn } from "@/lib/utils";
 import { RoleSelectionCard, UserRole } from "@/app/types";
+import { spec } from "node:test/reporters";
 
 
 //NAVIGATION
@@ -546,4 +557,55 @@ export const roleCard: RoleSelectionCard[] = [
       </RoleIcon>
     ),
   },
+];
+
+//COMMON SPECIALITIES
+
+export const commonSpecialities = [
+   
+   {
+    speciality: "Cardiologia",
+    icon: <HeartPulse className="h-5 w-5 text-primary" />,
+  },
+  {
+    speciality: "Dermatologia",
+    icon: <CircleDot className="h-5 w-5 text-primary" />,
+  },
+  {
+    speciality: "Endocrinologia",
+    icon: <Timer className="h-5 w-5 text-primary" />,
+  },
+  {
+    speciality: "Ginecologia e Obstetrícia",
+    icon: <Flower2 className="h-5 w-5 text-primary" />,
+  },
+  {
+    speciality: "Medicina Geral",
+    icon: <Stethoscope className="h-5 w-5 text-primary" />,
+  },
+  {
+    speciality: "Neurologia",
+    icon: <Brain className="h-5 w-5 text-primary" />,
+  },
+  {
+    speciality: "Nutricionista",
+    icon: <UserCog className="h-5 w-5 text-primary" />,
+  },
+  {
+    speciality: "Pediatria",
+    icon: <Baby className="h-5 w-5 text-primary" />,
+  },
+  {
+    speciality: "Psicologia",
+    icon: <Users className="h-5 w-5 text-primary" />,
+  },
+  {
+    speciality: "Psiquiatria",
+    icon: <Activity className="h-5 w-5 text-primary" />,
+  },
+  {
+    speciality: "Urologia",
+    icon: <Milestone className="h-5 w-5 text-primary" />,
+  },
+
 ];

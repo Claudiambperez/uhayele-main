@@ -7,7 +7,7 @@ import { AuroraBackground } from "@/components/ui/aurora-background";
 import Link from "next/link";
 import { RiArrowGoBackLine } from "react-icons/ri";
 import { FocusCards } from "@/components/ui/focus-cards";
-import { roleCard } from "../../../../constants";
+import { roleCard } from "../../../../../constants";
 
 export default function RoleSelectionPage() {
   const router = useRouter();

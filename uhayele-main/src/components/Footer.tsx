@@ -1,10 +1,10 @@
 //import React from 'react'
 
 
+import { assets } from "@/app/assets/images"
 import Image from "next/image"
 import Link from "next/link"
-import { assets } from "../assets/images"
-import { footer_links, socialLinks } from "../../../constants"
+import { footer_links, socialLinks } from "../../constants"
 
 
 const Footer = () => {

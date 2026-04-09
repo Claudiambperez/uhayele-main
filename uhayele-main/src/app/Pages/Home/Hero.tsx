@@ -4,7 +4,8 @@ import { TypingAnimation } from '@/components/ui/typing-animation'
 import { assets } from '@/app/assets/images'
 import Image from 'next/image'
 import { motion } from 'motion/react'
-import { AnimatedModalDemo } from '@/app/Components/Modal'
+import { AnimatedModalDemo } from '@/components/Modal'
+
 
 const Hero = () => {
   return (

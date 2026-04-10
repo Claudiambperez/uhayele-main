@@ -1,120 +1,66 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "motion/react";
+import * as React from "react";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
+
 import { cn } from "@/lib/utils";
-import { Card } from "./card";
 
-type Tab = {
-  title: string;
-  value: string;
-  content?: string | React.ReactNode | any;
-};
-
-export const Tabs = ({
-  tabs: propTabs,
-  containerClassName,
-  activeTabClassName,
-  tabClassName,
-  contentClassName,
-}: {
-  tabs: Tab[];
-  containerClassName?: string;
-  activeTabClassName?: string;
-  tabClassName?: string;
-  contentClassName?: string;
-}) => {
-  const [active, setActive] = useState<Tab>(propTabs[0]);
-  const [tabs, setTabs] = useState<Tab[]>(propTabs);
-
-  const moveSelectedTabToTop = (idx: number) => {
-    const newTabs = [...propTabs];
-    const selectedTab = newTabs.splice(idx, 1);
-    newTabs.unshift(selectedTab[0]);
-    setTabs(newTabs);
-    setActive(newTabs[0]);
-  };
-
-  const [hovering, setHovering] = useState(false);
-
-  return (
-    <Card className="border border-gray-200 shadow-sm w-full">
-      {/* Tab Buttons */}
-      <div className="px-6 pt-2 ">
-        <div
-          className={cn(
-            "flex flex-row items-center justify-start [perspective:1000px] relative overflow-auto sm:overflow-visible no-visible-scrollbar max-w-full w-full",
-            containerClassName
-          )}
-        >
-          {propTabs.map((tab, idx) => (
-            <button
-              key={tab.title}
-              onClick={() => moveSelectedTabToTop(idx)}
-              onMouseEnter={() => setHovering(true)}
-              onMouseLeave={() => setHovering(false)}
-              className={cn("relative px-6 py-3 rounded-full whitespace-nowrap", tabClassName)}
-              style={{
-                transformStyle: "preserve-3d",
-              }}
-            >
-              {active.value === tab.value && (
-                <motion.div
-                  layoutId="clickedbutton"
-                  transition={{ type: "spring", bounce: 0.3, duration: 0.6 }}
-                  className={cn(
-                    "absolute inset-0 bg-violet-100 rounded-full",
-                    activeTabClassName
-                  )}
-                />
-              )}
-
-              <span className="relative block text-sm font-medium text-gray-700">
-                {tab.title}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Content Area - Full height and width support */}
-      <div className={cn("p-6 h-[100px] min-h-[400px] w-full", contentClassName)}>
-        <FadeInDiv
-          tabs={tabs}
-          active={active}
-          key={active.value}
-          hovering={hovering}
-        />
-      </div>
-    </Card>
-  );
-};
-
-export const FadeInDiv = ({
+function Tabs({
   className,
-  tabs,
-  active,
-  hovering,
-}: {
-  className?: string;
-  tabs: Tab[];
-  active: Tab;
-  hovering?: boolean;
-}) => {
+  ...props
+}: React.ComponentProps<typeof TabsPrimitive.Root>) {
   return (
-    <div className="relative w-full min-h-[400px]">
-      {tabs.map((tab) => (
-        <div
-          key={tab.value}
-          className={cn(
-            "w-full absolute top-0 left-0 transition-opacity duration-200",
-            tab.value === active.value ? "opacity-100 block" : "opacity-30 hidden",
-            className
-          )}
-        >
-          {tab.content}
-        </div>
-      ))}
-    </div>
+    <TabsPrimitive.Root
+      data-slot="tabs"
+      className={cn("flex flex-col gap-2", className)}
+      {...props}
+    />
   );
-};
+}
+
+function TabsList({
+  className,
+  ...props
+}: React.ComponentProps<typeof TabsPrimitive.List>) {
+  return (
+    <TabsPrimitive.List
+      data-slot="tabs-list"
+      className={cn(
+        "bg-muted text-muted-foreground inline-flex h-12 w-fit items-center justify-center rounded-xl p-[3px] flex",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function TabsTrigger({
+  className,
+  ...props
+}: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
+  return (
+    <TabsPrimitive.Trigger
+      data-slot="tabs-trigger"
+      className={cn(
+        "data-[state=active]:bg-card dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-xl border border-transparent px-4 py-3 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function TabsContent({
+  className,
+  ...props
+}: React.ComponentProps<typeof TabsPrimitive.Content>) {
+  return (
+    <TabsPrimitive.Content
+      data-slot="tabs-content"
+      className={cn("flex-1 outline-none", className)}
+      {...props}
+    />
+  );
+}
+
+export { Tabs, TabsList, TabsTrigger, TabsContent };

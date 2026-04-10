@@ -5,6 +5,7 @@ import { format, isBefore, startOfDay, isAfter, isSameDay } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
 
 type ViewType = 'today' | 'week' | 'month';
 
@@ -268,26 +269,26 @@ export default function App() {
             <div className="bg-white rounded-3xl shadow-sm border border-gray-200 p-6">
               {/* Tabs */}
               <div className="flex items-center gap-2 mb-6">
-                <button
+                <Button
                   onClick={() => setActiveTab('upcoming')}
-                  className={`flex-1 py-3 px-6 rounded-2xl font-medium transition-all ${
+                  className={`flex-1 p-6 rounded-xl font-medium transition-all ${
                     activeTab === 'upcoming'
                       ? 'bg-zinc-900 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
                   Consultas Futuras ({upcomingAppointments.length})
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => setActiveTab('past')}
-                  className={`flex-1 py-3 px-6 rounded-2xl font-medium transition-all ${
+                  className={`flex-1 p-6 rounded-xl font-medium transition-all ${
                     activeTab === 'past'
                       ? 'bg-zinc-900 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
                   Consultas Passadas ({pastAppointments.length})
-                </button>
+                </Button>
               </div>
 
               {/* Appointments List */}
@@ -305,7 +306,7 @@ export default function App() {
                         onClick={() => setSelectedAppointment(appointment)}
                         className={`border rounded-2xl p-5 hover:shadow-sm transition-all cursor-pointer ${
                           selectedAppointment?.id === appointment.id
-                            ? 'border-violet-500 bg-violet-50'
+                            ? 'border-emerald-500 bg-emerald-50'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
@@ -408,7 +409,7 @@ export default function App() {
             {selectedAppointment ? (
               <div className="bg-white border border-gray-200 rounded-3xl h-[520px] w-[360px] flex flex-col overflow-hidden">
                 <div className="px-6 py-5 border-b flex gap-2 items-center justify-between flex-shrink-0">
-                  <h2 className="text-lg font-semibold text-gray-900">Detalhes da Consulta</h2>
+                  <h2 className="text-lg font-semibold text-gray-900 normal-case">Detalhes da Consulta</h2>
                   <button
                     onClick={() => setSelectedAppointment(null)}
                     className="text-sm text-zinc-500 hover:text-zinc-700 font-medium"
@@ -417,7 +418,7 @@ export default function App() {
                   </button>
                 </div>
 
-                <div className="flex-1 p-6 overflow-y-auto">
+                <div className="flex-1 overflow-y-auto p-6 ">
                   {/* Patient Info */}
                   <div className="mb-6">
                     <div className="flex items-center gap-3 mb-4">
@@ -511,12 +512,12 @@ export default function App() {
                 {/* Actions for upcoming appointments */}
                 {selectedAppointment.status !== 'completed' && (
                   <div className="p-6 border-t bg-white flex-shrink-0 space-y-2">
-                    <button className="w-full bg-zinc-900 text-white py-3 rounded-2xl font-medium hover:bg-black transition-colors">
+                    <Button className="w-full h-12 bg-zinc-900  hover:bg-black  text-white py-3 rounded-xl font-medium transition-colors">
                       Iniciar Consulta
-                    </button>
-                    <button className="w-full bg-zinc-100 text-zinc-700 py-3 rounded-2xl font-medium hover:bg-zinc-200 transition-colors">
+                    </Button>
+                    <Button className="w-full h-12 bg-zinc-100 text-zinc-700 py-3 rounded-xl font-medium hover:bg-zinc-200 transition-colors">
                       Reagendar
-                    </button>
+                    </Button>
                   </div>
                 )}
               </div>

@@ -19,14 +19,37 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+// ====================== ZOD SCHEMA ======================
 const patientSchema = z.object({
-  firstName: z.string().min(2, "O primeiro nome deve ter pelo menos 2 caracteres."),
-  lastName: z.string().min(2, "O apelido deve ter pelo menos 2 caracteres."),
-  email: z.string().email("Introduza um email válido."),
-  phone: z.string().min(9, "Número de telefone inválido (mínimo 9 dígitos)."),
-  dateOfBirth: z.string().min(1, "Data de nascimento é obrigatória."),
+  firstName: z.string()
+    .min(2, "O primeiro nome deve ter pelo menos 2 caracteres.")
+    .max(50, "Nome muito longo."),
+
+  lastName: z.string()
+    .min(2, "O apelido deve ter pelo menos 2 caracteres.")
+    .max(50, "Apelido muito longo."),
+
+  email: z.string()
+    .email("Introduza um email válido.")
+    .max(100, "Email muito longo."),
+
+  phone: z.string()
+    .min(9, "Número de telefone inválido.")
+    .regex(/^(\+244|0)?[9][0-9]{8}$/, "Número deve começar com 9 e ter 9 dígitos (ex: 923456789)"),
+
+  dateOfBirth: z.string()
+    .min(1, "Data de nascimento é obrigatória.")
+    .refine((date) => {
+      const selected = new Date(date);
+      const today = new Date();
+      const minDate = new Date(1900, 0, 1);
+      return selected <= today && selected >= minDate;
+    }, {
+      message: "Data de nascimento deve estar entre 1900 e hoje."
+    }),
+
   gender: z.enum(["Masculino", "Feminino", "Outro"], {
-    required_error: "Selecione o género",
+    required_error: "Por favor, selecione o género.",
   }),
 });
 
@@ -34,42 +57,40 @@ type FormData = z.infer<typeof patientSchema>;
 
 export default function PatientOnboarding() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(patientSchema),
-    mode: "onTouched",
+    mode: "onBlur",           // Melhor que onTouched para UX
     defaultValues: {
       firstName: "",
       lastName: "",
       email: "",
       phone: "",
       dateOfBirth: "",
-      gender: undefined,
+      gender: undefined as any,
     },
   });
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
-    setIsLoading(true);
 
     const fullData: PatientOnboardingData = {
       ...data,
-      dateOfBirth: data.dateOfBirth,
+      dateOfBirth: data.dateOfBirth, // Converte para Date se o teu tipo precisar
     };
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1400));
+      await new Promise(resolve => setTimeout(resolve, 1200));
 
       console.log("✅ Patient Onboarding Data:", fullData);
-
-      window.location.href = "/dashboard/patient";
+      
+      // TODO: Enviar para API
+      window.location.href = "/patient"; 
     } catch (error) {
       console.error(error);
-      alert("Ocorreu um erro. Tente novamente.");
+      alert("Ocorreu um erro ao guardar os dados. Tente novamente.");
     } finally {
       setIsSubmitting(false);
-      setIsLoading(false);
     }
   };
 
@@ -77,12 +98,13 @@ export default function PatientOnboarding() {
     <OnboardingLayout
       currentStep={2}
       title="Dados Pessoais"
-      subtitle="Complete as informações para continuar"
-      isLoading={isLoading}
+      subtitle="Complete as suas informações para continuar"
+      isLoading={isSubmitting}
     >
-      <TooltipProvider delayDuration={150}>
+      <TooltipProvider delayDuration={100}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          {/* First Name + Last Name */}
+          
+          {/* Nome + Apelido */}
           <div className="grid grid-cols-2 gap-4">
             <LabelInputContainer>
               <div className="flex items-center justify-between">
@@ -93,7 +115,7 @@ export default function PatientOnboarding() {
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 h-5 w-5" />
                 <Input
                   id="firstName"
-                  className="pl-11 h-8"
+                  className="pl-11 h-10"
                   placeholder="João"
                   {...form.register("firstName")}
                 />
@@ -107,7 +129,7 @@ export default function PatientOnboarding() {
               </div>
               <Input
                 id="lastName"
-                className="h-8"
+                className="h-10"
                 placeholder="Manuel"
                 {...form.register("lastName")}
               />
@@ -123,13 +145,13 @@ export default function PatientOnboarding() {
             <Input
               id="email"
               type="email"
-              className="h-8"
+              className="h-10"
               placeholder="joao.manuel@email.com"
               {...form.register("email")}
             />
           </LabelInputContainer>
 
-          {/* Phone */}
+          {/* Telefone */}
           <LabelInputContainer>
             <div className="flex items-center justify-between">
               <Label htmlFor="phone">Telefone</Label>
@@ -139,14 +161,14 @@ export default function PatientOnboarding() {
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 h-5 w-5" />
               <Input
                 id="phone"
-                className="pl-11 h-8"
+                className="pl-11 h-10"
                 placeholder="+244 923 456 789"
                 {...form.register("phone")}
               />
             </div>
           </LabelInputContainer>
 
-          {/* Date of Birth + Gender - Same width */}
+          {/* Data de Nascimento + Género */}
           <div className="grid grid-cols-2 gap-4">
             <LabelInputContainer>
               <div className="flex items-center justify-between">
@@ -158,7 +180,8 @@ export default function PatientOnboarding() {
                 <Input
                   id="dateOfBirth"
                   type="date"
-                  className="pl-11 h-8"
+                  max={new Date().toISOString().split('T')[0]}
+                  className="pl-11 h-10"
                   {...form.register("dateOfBirth")}
                 />
               </div>
@@ -170,10 +193,10 @@ export default function PatientOnboarding() {
                 <FieldError message={form.formState.errors.gender?.message} />
               </div>
               <Select 
-                onValueChange={(value) => form.setValue("gender", value as any, { shouldValidate: true })}
+                onValueChange={(value) => form.setValue("gender", value as "Masculino" | "Feminino" | "Outro", { shouldValidate: true })}
                 value={form.watch("gender")}
               >
-                <SelectTrigger id="gender" className="h-8">
+                <SelectTrigger id="gender" className="h-10">
                   <SelectValue placeholder="Selecione o género" />
                 </SelectTrigger>
                 <SelectContent>
@@ -187,12 +210,10 @@ export default function PatientOnboarding() {
 
           <Button
             type="submit"
-            className="w-full h-8 text-base font-medium"
-            disabled={isSubmitting || isLoading || form.formState.isSubmitting}
+            className="w-full h-11 text-base font-medium"
+            disabled={isSubmitting || form.formState.isSubmitting}
           >
-            {isLoading || isSubmitting
-              ? "A preparar a sua experiência..."
-              : "Concluir Registo de Paciente"}
+            {isSubmitting ? "A guardar dados..." : "Concluir Registo de Paciente"}
           </Button>
         </form>
       </TooltipProvider>

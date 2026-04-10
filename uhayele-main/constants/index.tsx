@@ -29,7 +29,8 @@ import {
   Activity, 
   UserCog,    
   Users,      
-  Milestone 
+  Milestone, 
+  Bone
 } from "lucide-react";
 
 
@@ -38,6 +39,7 @@ import  { StaticImageData }  from 'next/image';
 import { cn } from "@/lib/utils";
 import { RoleSelectionCard, UserRole } from "@/app/types";
 import { spec } from "node:test/reporters";
+import { FaWater } from "react-icons/fa";
 
 
 //NAVIGATION
@@ -587,9 +589,21 @@ export const commonSpecialities = [
     speciality: "Neurologia",
     icon: <Brain className="h-5 w-5 text-primary" />,
   },
+    {
+    speciality: "Hematologia",
+    icon: <FaWater className="h-5 w-5 text-primary" />,
+  },
+   {
+    speciality: "Gastroenterologia",
+    icon: <FaWater className="h-5 w-5 text-primary" />,
+  },
   {
     speciality: "Nutricionista",
     icon: <UserCog className="h-5 w-5 text-primary" />,
+  },
+    {
+    speciality: "Fisiatria",
+    icon: <Bone className="h-5 w-5 text-primary" />,
   },
   {
     speciality: "Pediatria",

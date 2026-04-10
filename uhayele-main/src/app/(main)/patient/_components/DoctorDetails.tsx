@@ -80,7 +80,7 @@ export default function DoctorDetail() {
                       Dr. {doctor.firstName} {doctor.lastName}
                     </h1>
                     <div className="flex flex-wrap gap-2">
-                      {doctor.specializations.map((spec) => (
+                      {doctor.speciality.map((spec) => (
                         <Badge key={spec.id} variant="secondary">
                           {spec.name}
                         </Badge>
@@ -165,7 +165,7 @@ export default function DoctorDetail() {
               Especialidades
             </h2>
             <div className="space-y-4">
-              {doctor.specializations.map((spec) => (
+              {doctor.speciality.map((spec) => (
                 <div key={spec.id}>
                   <h3 className="font-medium text-lg text-gray-900 mb-1">
                     {spec.name}
